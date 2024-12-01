@@ -79,6 +79,15 @@ class TaskManager:
         self.last_id += 1
         if category not in self.categories:
             self.categories.append(category)
+    
+    def edit_task(self, id: int, **kwargs) -> Task:
+        """Редактирует задачу, меняя указанные поля"""
+
+        task = self.get_task_by_id(id)
+        if task:
+            for kwarg in kwargs.keys():
+                setattr(task, kwarg, kwargs[kwarg])
+            return task
 
     def delete_task(self, id: int) -> Task | None:
         """Удаляет задачу"""
@@ -102,7 +111,7 @@ class TaskManager:
                 matched_tasks.append(task)
         return matched_tasks
     
-    def get_tasks_by_category(self, category) -> list[Task]:
+    def get_tasks_by_category(self, category: str) -> list[Task]:
         """Возвращает задачи с указанной категорией"""
 
         matched_tasks: list[Task] = []
@@ -111,7 +120,7 @@ class TaskManager:
                 matched_tasks.append(task)
         return matched_tasks
     
-    def get_tasks_by_status(self, status) -> list[Task]:
+    def get_tasks_by_status(self, status: str) -> list[Task]:
         """Возвращает задачи с указанным статусом"""
 
         matched_tasks: list[Task] = []
@@ -119,3 +128,10 @@ class TaskManager:
             if task.status == status:
                 matched_tasks.append(task)
         return matched_tasks
+    
+    def get_task_by_id(self, id: int) -> Task | None:
+        """Возвращает задачу с указанным ID"""
+
+        for task in self.tasks:
+            if task.id == id:
+                return task
