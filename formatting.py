@@ -30,13 +30,6 @@ class Style:
 
 
 
-def format_titles(titles: str) -> str:
-    """Делает заголовки столбцов таблицы жирными"""
-    
-    return Style.B + titles.replace("|", f"{RESET}|{Style.B}") + RESET
-
-
-
 if __name__ == "__main__":
     print(f"""Данный модуль позволяет писать в консоли {Style.B}жирным{RESET},
           {Style.I}курсивом{RESET}, {Style.U}подчёркнутым{RESET} и {Style.S}зачёркнутым{RESET},
