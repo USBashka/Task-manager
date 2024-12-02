@@ -1,0 +1,46 @@
+{
+    "last_id": 5,
+    "categories": [
+        "Обучение",
+        "Геймдев",
+        "Работа"
+    ],
+    "tasks": [
+        {
+            "id": 2,
+            "title": "Сделать игру Invertale",
+            "description": "Сделать фан-игру на Годоте",
+            "category": "Геймдев",
+            "due_date": "31-05-2025",
+            "priority": "Низкий",
+            "status": "Не выполнена"
+        },
+        {
+            "id": 3,
+            "title": "Изучить SQL",
+            "description": "Пройти курс по SQL",
+            "category": "Обучение",
+            "due_date": "10-12-2024",
+            "priority": "Средний",
+            "status": "Не выполнена"
+        },
+        {
+            "id": 4,
+            "title": "Сделать GPT Dataset Editor",
+            "description": "Сделать редактор датасетов для файнтюна GPT на Годоте",
+            "category": "Работа",
+            "due_date": "01-01-2025",
+            "priority": "Низкий",
+            "status": "Не выполнена"
+        },
+        {
+            "id": 5,
+            "title": "Сделать тестовое Хайталент",
+            "description": "Сделать тестовое задание на вакансию Junior Python Developer в Хайталент",
+            "category": "Работа",
+            "due_date": "03-12-2024",
+            "priority": "Высокий",
+            "status": "Выполнена"
+        }
+    ]
+}
