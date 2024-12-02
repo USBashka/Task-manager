@@ -128,7 +128,7 @@ def show_current(manager: TaskManager) -> None:
 def add_task(manager: TaskManager) -> None:
     """Запрашивает информацию о новой задаче и добавляет её в вистему"""
 
-    title: str = input("Название новой задачи: ")
+    title: str = input("Название новой задачи: ").strip()
     if not title:
         print("Название не может быть пустым")
         return
@@ -142,9 +142,9 @@ def add_task(manager: TaskManager) -> None:
         case "1" | "низкий" | "1 - низкий":
             priority = "Низкий"
         case "2" | "средний" | "2 - средний":
-            priority = "Низкий"
+            priority = "Средний"
         case "3" | "высокий" | "3 - высокий":
-            priority = "Низкий"
+            priority = "Высокий"
         case _:
             print("Недопустимое значение приоритета")
             return
@@ -171,9 +171,9 @@ def edit_task(manager: TaskManager) -> None:
                 case "1" | "низкий" | "1 - низкий":
                     new_priority = "Низкий"
                 case "2" | "средний" | "2 - средний":
-                    new_priority = "Низкий"
+                    new_priority = "Средний"
                 case "3" | "высокий" | "3 - высокий":
-                    new_priority = "Низкий"
+                    new_priority = "Высокий"
                 case _:
                     new_priority = ""
             manager.edit_task(int(task_id), title=new_title, description=new_desc, category=new_category,
@@ -218,6 +218,7 @@ def delete_task(manager: TaskManager) -> None:
     if task_id.isdigit():
         deleted_task: Task = manager.delete_task(int(task_id))
         if deleted_task:
+            manager.save_data()
             print(f"Задача {deleted_task.title} удалена")
         else:
             print("Задачи с таким ID не найдено")
@@ -249,7 +250,7 @@ def find_task(manager: TaskManager) -> None:
             matched_tasks = manager.get_tasks_by_status(status)
     if matched_tasks:
         number: int = len(matched_tasks)
-        print(f"{get_plural("найдена", number).capitalize()} {number} {get_plural("задача", number)}:")
+        print(f"{get_plural('найдена', number).capitalize()} {number} {get_plural('задача', number)}:")
         print_tasks(matched_tasks)
     else:
         print("Задач с такими параметрами не найдено")
@@ -298,6 +299,7 @@ def main() -> None:
                     break
                 case _:
                     print(f"{Color.RED}Такой команды не существует{RESET}")
+            print()
     
     except (EOFError, KeyboardInterrupt):
         print(f"{RESET}До свидания!")

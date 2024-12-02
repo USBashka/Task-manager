@@ -86,9 +86,9 @@ class TaskManager:
         """Редактирует задачу, меняя указанные поля"""
 
         task: Task = self.get_task_by_id(id)
-        old_category: str
+        old_category: str = ""
         if task:
-            if "category" in kwargs:
+            if "category" in kwargs and kwargs["category"]:
                 old_category = task.category
                 if kwargs["category"] not in self.categories:
                     self.categories.append(kwargs["category"])
