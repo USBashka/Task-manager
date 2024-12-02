@@ -67,6 +67,14 @@ def get_plural(word: str, number: int) -> str:
         return word
 
 
+def show_help() -> None:
+    """Показывает доступные команды и их краткое описание"""
+
+    print("Доступные команды (вводить можно как на английском, так и на русском):")
+    for command in commands.keys():
+        print(Style.B + command + RESET, commands[command], sep="\t")
+
+
 def show_current(manager: TaskManager) -> None:
     """Запрашивает категорию и выводит невыполненные задачи по ней, либо по всем"""
 
@@ -116,12 +124,32 @@ def show_current(manager: TaskManager) -> None:
     print_tasks(current_tasks)
 
 
-def show_help() -> None:
-    """Показывает доступные команды и их краткое описание"""
+def add_task(manager: TaskManager) -> None:
+    """Запрашивает информацию о новой задаче и добавляет её в вистему"""
 
-    print("Доступные команды (вводить можно как на английском, так и на русском):")
-    for command in commands.keys():
-        print(Style.B + command + RESET, commands[command], sep="\t")
+    title: str = input("Название новой задачи: ")
+    if not title:
+        print("Название не может быть пустым")
+        return
+    desc: str = input("Описание: ")
+    category: str = input("Категория: ")
+    due_date: str = input("Дедлайн: ")
+    print("Выберите приоритет задачи:")
+    print("1 - Низкий / 2 - Средний / 3 - Высокий")
+    priority: str = input("Приоритет: ")
+    match priority.lower().strip():
+        case "1" | "низкий" | "1 - низкий":
+            priority = "Низкий"
+        case "2" | "средний" | "2 - средний":
+            priority = "Низкий"
+        case "3" | "высокий" | "3 - высокий":
+            priority = "Низкий"
+        case _:
+            print("Недопустимое значение приоритета")
+            return
+    task: Task = manager.add_task(title, desc, category, due_date, priority)
+    manager.save_data()
+    print(f"Задача {task.title} добавлена под ID {task.id}")
 
 
 def main() -> None:

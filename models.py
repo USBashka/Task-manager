@@ -14,7 +14,7 @@ class Task:
     title: str  # Название
     description: str  # Описание
     category: str  # Категория
-    due_date: str  # Срок выполнения в формате YYYY-MM-DD
+    due_date: str  # Срок выполнения в свободном формате
     priority: str  # Приоритет (Низкий/Средний/Высокий)
     status: str  # Статус (Выполнена/Не выполнена)
 
@@ -72,13 +72,15 @@ class TaskManager:
                 current_tasks.append(task)
         return current_tasks
     
-    def add_task(self, title: str, desc: str, category: str, due_date: str, priority: str) -> None:
+    def add_task(self, title: str, desc: str, category: str, due_date: str, priority: str) -> Task:
         """Добавляет новую задачу"""
 
-        self.tasks.append(Task(self.last_id+1, title, desc, category, due_date, priority, "Не выполнена"))
+        task: Task = Task(self.last_id+1, title, desc, category, due_date, priority, "Не выполнена")
         self.last_id += 1
+        self.tasks.append(task)
         if category not in self.categories:
             self.categories.append(category)
+        return task
     
     def edit_task(self, id: int, **kwargs) -> Task:
         """Редактирует задачу, меняя указанные поля"""
