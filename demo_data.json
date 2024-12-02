@@ -11,7 +11,7 @@
             "title": "Сделать игру Invertale",
             "description": "Сделать фан-игру на Годоте",
             "category": "Геймдев",
-            "due_date": "31-05-2025",
+            "due_date": "2025-05-31",
             "priority": "Низкий",
             "status": "Не выполнена"
         },
@@ -20,7 +20,7 @@
             "title": "Изучить SQL",
             "description": "Пройти курс по SQL",
             "category": "Обучение",
-            "due_date": "10-12-2024",
+            "due_date": "2024-12-10",
             "priority": "Средний",
             "status": "Не выполнена"
         },
@@ -29,7 +29,7 @@
             "title": "Сделать GPT Dataset Editor",
             "description": "Сделать редактор датасетов для файнтюна GPT на Годоте",
             "category": "Работа",
-            "due_date": "01-01-2025",
+            "due_date": "2025-01-01",
             "priority": "Низкий",
             "status": "Не выполнена"
         },
@@ -38,7 +38,7 @@
             "title": "Сделать тестовое Хайталент",
             "description": "Сделать тестовое задание на вакансию Junior Python Developer в Хайталент",
             "category": "Работа",
-            "due_date": "03-12-2024",
+            "due_date": "2024-12-03",
             "priority": "Высокий",
             "status": "Выполнена"
         }
