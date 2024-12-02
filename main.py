@@ -37,24 +37,82 @@ def print_tasks(tasks: list[Task]) -> None:
     else:
         for task in tasks:
             t_id: str = str(task.id).center(6)
-            print(f"┌──────┬────╼")
+            print( "┌──────┬────╼")
             print(f"│      │ {Style.B}{task.title}{RESET}")
             print(f"│      │ {task.description}")
             print(f"│{t_id}│ Категория: {task.category}")
             print(f"│      │ Дедлайн: {task.due_date}")
             print(f"│      │ Приоритет: {task.priority} │ Статус: {task.status}")
-            print(f"└──────┴───────────────────────────────────────────────────────────╼")
+            print( "└──────┴───────────────────────────────────────────────────────────╼")
 
+
+def get_plural(word: str, number: int) -> str:
+    """Возвращает слово в указанном числе"""
+
+    words: dict[str, list[str]] = {
+        "задача": ["задачи", "задач"],
+        "невыполненная": ["невыполненные", "невыполненных"]
+    }
+
+    if word in words:
+        if 10 < number < 20:
+            return words[word][1]
+        elif number % 10 == 1:
+            return word
+        elif 1 < number % 10 < 5:
+            return words[word][0]
+        else:
+            return words[word][1]
+    else:
+        return word
 
 
 def show_current(manager: TaskManager) -> None:
     """Запрашивает категорию и выводит невыполненные задачи по ней, либо по всем"""
 
+    current_tasks: list[Task] = []
     print("По какой категории показать задачи:")
     print("0 - По всем")
     for i, c in enumerate(manager.categories, start=1):
         print(f"{i} - {c}")
-    current_tasks: list[Task] = manager.get_current_tasks()
+    category: str = input("Категория: ").strip()
+    if category:
+        if category == "0" or category == "По всем":
+            current_tasks = manager.get_current_tasks()
+            if current_tasks:
+                un_tasks: str = get_plural("невыполненная", len(current_tasks)) + " " + get_plural("задача", len(current_tasks))
+                print(f"Сейчас у вас {len(current_tasks)} {un_tasks}:")
+            else:
+                print("Сейчас у вас нет невыполненных задач")
+        elif category.isdigit():
+            category_number: int = int(category)
+            if category_number <= len(manager.categories):
+                category = manager.categories[category_number-1]
+                current_tasks = manager.get_current_tasks(category)
+                if current_tasks:
+                    un_tasks: str = get_plural("невыполненная", len(current_tasks)) + " " + get_plural("задача", len(current_tasks))
+                    print(f"Сейчас у вас {len(current_tasks)} {un_tasks} в категории {category}:")
+                else:
+                    print("Сейчас у вас нет невыполненных задач в категории {category}")
+            else:
+                print("Такой категории нету")
+        elif category in manager.categories:
+            current_tasks = manager.get_current_tasks(category)
+            if current_tasks:
+                un_tasks: str = get_plural("невыполненная", len(current_tasks)) + " " + get_plural("задача", len(current_tasks))
+                print(f"Сейчас у вас {len(current_tasks)} {un_tasks} в категории {category}:")
+            else:
+                print("Сейчас у вас нет невыполненных задач в категории {category}")
+        else:
+            print("Такой категории нету")
+    else:
+        current_tasks = manager.get_current_tasks()
+        if current_tasks:
+            un_tasks: str = get_plural("невыполненная", len(current_tasks)) + " " + get_plural("задача", len(current_tasks))
+            print(f"Сейчас у вас {len(current_tasks)} {un_tasks}:")
+        else:
+            print("Сейчас у вас нет невыполненных задач")
+        
     print_tasks(current_tasks)
 
 
