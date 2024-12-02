@@ -51,7 +51,8 @@ def get_plural(word: str, number: int) -> str:
 
     words: dict[str, list[str]] = {
         "задача": ["задачи", "задач"],
-        "невыполненная": ["невыполненные", "невыполненных"]
+        "невыполненная": ["невыполненные", "невыполненных"],
+        "найдена": ["найдено", "найдено"]
     }
 
     if word in words:
@@ -191,18 +192,76 @@ def do_task(manager: TaskManager) -> None:
     task_id: str = input("ID выполненной задачи: ")
     if task_id.isdigit():
         task: Task = manager.get_task_by_id(int(task_id))
-        if task.status != "Выполнена":
-            task.status = "Выполнена"
-            print(f"Задача {task.title} отмечена как выполненная")
+        if task:
+            if task.status != "Выполнена":
+                task.status = "Выполнена"
+                print(f"Задача {task.title} отмечена как выполненная")
+            else:
+                undo: str = input(f"Задача {task.title} уже выполнена. Отменить выполнение? (Да/Нет): ").lower().strip()
+                match undo:
+                    case "yes" | "y" | "да" | "д":
+                        task.status = "Не выполнена"
+                        print(f"Задача отмечена как невыполненная")
+                    case _:
+                        print("Хорошо, пусть всё остаётся как есть")
+            manager.save_data()
         else:
-            undo: str = input(f"Задача {task.title} уже выполнена. Отменить выполнение? (Да/Нет): ").lower().strip()
-            match undo:
-                case "yes" | "y" | "да" | "д":
-                    task.status = "Не выполнена"
-                    print(f"Задача отмечена как невыполненная")
-                case _:
-                    print("Хорошо, пусть всё остаётся как есть")
-        manager.save_data()
+            print("Задачи с таким ID не найдено")
+    else:
+        print("ID задачи может состоять только из цифр")
+
+
+def delete_task(manager: TaskManager) -> None:
+    """Запрашивает ID задачи и удаляет её"""
+
+    task_id: str = input("ID удаляемой задачи: ")
+    if task_id.isdigit():
+        deleted_task: Task = manager.delete_task(int(task_id))
+        if deleted_task:
+            print(f"Задача {deleted_task.title} удалена")
+        else:
+            print("Задачи с таким ID не найдено")
+    else:
+        print("ID задачи может состоять только из цифр")
+
+
+def find_task(manager: TaskManager) -> None:
+    """Запрашивает по какому параметру искать, затем сам параметр, после чего выводит подходящие задачи"""
+
+    print("Выберите, по какому параметру искать задачи: ")
+    print("1 - Ключевые слова / 2 - Категория / 3 - Статус")
+    matched_tasks: list[Task] = []
+    param: str = input("Параметр поиска: ").lower().strip()
+    match param:
+        case "1" | "ключевые слова" | "1 - ключевые слова":
+            keywords: list[str] = input("Введите ключевые слова через пробел: ").lower().strip().split(" ")
+            matched_tasks = manager.get_tasks_by_keywords(keywords)
+        case "2" | "категория" | "2 - категория":
+            category: str = input("Введите категорию: ")
+            matched_tasks = manager.get_tasks_by_category(category)
+        case "3" | "статус" | "3 - статус":
+            status: str = input("Введите статус (1 - Не выполнена / 2 - Выполнена)").lower().strip()
+            match status:
+                case "1" | "не выполнена" | "1 - не выполнена":
+                    status = "Не выполнена"
+                case "2" | "выполнена" | "2 выполнена":
+                    status = "Выполнена"
+            matched_tasks = manager.get_tasks_by_status(status)
+    if matched_tasks:
+        number: int = len(matched_tasks)
+        print(f"{get_plural("найдена", number).capitalize()} {number} {get_plural("задача", number)}:")
+        print_tasks(matched_tasks)
+    else:
+        print("Задач с такими параметрами не найдено")
+
+
+def show_list(manager: TaskManager) -> None:
+    """Выводит все задачи"""
+
+    if manager.tasks:
+        print_tasks(manager.tasks)
+    else:
+        print("Вы ещё не добавили ни одной задачи. Используйте команду \"добавить\"")
 
 
 def main() -> None:
