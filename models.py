@@ -85,10 +85,20 @@ class TaskManager:
     def edit_task(self, id: int, **kwargs) -> Task:
         """Редактирует задачу, меняя указанные поля"""
 
-        task = self.get_task_by_id(id)
+        task: Task = self.get_task_by_id(id)
+        old_category: str
         if task:
-            for kwarg in kwargs.keys():
-                setattr(task, kwarg, kwargs[kwarg])
+            if "category" in kwargs:
+                old_category = task.category
+                if kwargs["category"] not in self.categories:
+                    self.categories.append(kwargs["category"])
+            
+            for kwarg in kwargs:
+                if kwargs[kwarg]:
+                    setattr(task, kwarg, kwargs[kwarg])
+            
+            if old_category and not self.get_tasks_by_category(old_category):
+                self.categories.pop(self.categories.index(old_category))
             return task
 
     def delete_task(self, id: int) -> Task | None:

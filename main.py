@@ -152,6 +152,59 @@ def add_task(manager: TaskManager) -> None:
     print(f"Задача {task.title} добавлена под ID {task.id}")
 
 
+def edit_task(manager: TaskManager) -> None:
+    """Запрашивает ID задачи и позволяет изменить её поля"""
+
+    task_id: str = input("ID редактируемой задачи: ")
+    if task_id.isdigit():
+        task: Task = manager.get_task_by_id(int(task_id))
+        if task:
+            print_tasks([task])
+            print("Вводите новые значения полей (если не хотите изменять — оставьте пустыми)")
+            new_title: str = input("Название: ")
+            new_desc: str = input("Описание: ")
+            new_category = input("Категория: ")
+            new_due_date = input("Дедлайн: ")
+            new_priority: str = input("Приоритет (1 - Низкий / 2 - Средний / 3 - Высокий): ")
+            match new_priority.lower().strip():
+                case "1" | "низкий" | "1 - низкий":
+                    new_priority = "Низкий"
+                case "2" | "средний" | "2 - средний":
+                    new_priority = "Низкий"
+                case "3" | "высокий" | "3 - высокий":
+                    new_priority = "Низкий"
+                case _:
+                    new_priority = ""
+            manager.edit_task(int(task_id), title=new_title, description=new_desc, category=new_category,
+                              due_date=new_due_date, priority=new_priority)
+            manager.save_data()
+            print("Задача успешно изменена")
+        else:
+            print("Задачи с таким ID не найдено")
+    else:
+        print("ID задачи может состоять только из цифр")
+
+
+def do_task(manager: TaskManager) -> None:
+    """Запрашивает ID задачи и отмечает её как выполненную"""
+
+    task_id: str = input("ID выполненной задачи: ")
+    if task_id.isdigit():
+        task: Task = manager.get_task_by_id(int(task_id))
+        if task.status != "Выполнена":
+            task.status = "Выполнена"
+            print(f"Задача {task.title} отмечена как выполненная")
+        else:
+            undo: str = input(f"Задача {task.title} уже выполнена. Отменить выполнение? (Да/Нет): ").lower().strip()
+            match undo:
+                case "yes" | "y" | "да" | "д":
+                    task.status = "Не выполнена"
+                    print(f"Задача отмечена как невыполненная")
+                case _:
+                    print("Хорошо, пусть всё остаётся как есть")
+        manager.save_data()
+
+
 def main() -> None:
     """Точка входа"""
 
@@ -190,7 +243,7 @@ def main() -> None:
     except (EOFError, KeyboardInterrupt):
         print(f"{RESET}До свидания!")
     except Exception as e:
-        print(f"{Color.RED}{Style.B}e{RESET}")
+        print(f"{Color.RED}{Style.B}{e}{RESET}")
 
 
 
